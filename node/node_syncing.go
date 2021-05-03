@@ -108,6 +108,7 @@ type LegacySyncingPeerProvider struct {
 // NewLegacySyncingPeerProvider creates and returns a new node-based syncing
 // peer provider.
 func NewLegacySyncingPeerProvider(node *Node) *LegacySyncingPeerProvider {
+	fmt.Println("LegacySyncing: true")
 	var shardID func() uint32
 	if node.shardChains != nil {
 		shardID = node.Blockchain().ShardID
@@ -137,6 +138,10 @@ type DNSSyncingPeerProvider struct {
 // NewDNSSyncingPeerProvider returns a provider that uses given DNS name and
 // port number to resolve syncing peers.
 func NewDNSSyncingPeerProvider(zone, port string) *DNSSyncingPeerProvider {
+	fmt.Println("DNSSyncing: true")
+	fmt.Println("Syncing Port: " + port)
+	fmt.Println("Syncing Zone: " + zone)
+
 	return &DNSSyncingPeerProvider{
 		zone:       zone,
 		port:       port,
@@ -303,12 +308,15 @@ func (node *Node) doSync(bc *core.BlockChain, worker *worker.Worker, willJoinCon
 
 // SupportGRPCSyncServer do gRPC sync server
 func (node *Node) SupportGRPCSyncServer(port int) {
+	fmt.Println("GRPC Sync Server: true")
+	fmt.Printf("GRPC Sync Server Port:%d \n", port)
 	node.InitSyncingServer(port)
 	node.StartSyncingServer(port)
 }
 
 // StartGRPCSyncClient start the legacy gRPC sync process
 func (node *Node) StartGRPCSyncClient() {
+	fmt.Println("GRPC Sync Client: true")
 	if node.Blockchain().ShardID() != shard.BeaconChainShardID {
 		utils.Logger().Info().
 			Uint32("shardID", node.Blockchain().ShardID()).
